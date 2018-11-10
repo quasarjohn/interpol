@@ -9,6 +9,8 @@ from myparser import Parser
 from pprint import pprint
 from syntax import Syntax
 
+parsed_list = []
+
 
 def main():
     print('Welcome to IPOL interpreter!')
@@ -22,36 +24,42 @@ def main():
     # returns a 2d list containing the tokens per line of code
     tokens_list = tokenizer.tokenize(lines)
 
+    # for line in tokens_list:
+    #     for token in line:
+    #         print(token.type)
+    # print('$$$$$$$$$$')
+
     parser = Parser(syntax=Syntax().get_syntax())
 
     for line in tokens_list:
-        recursive_parse(parser, line)
-    
+        recursive_parse(parser, line, callback)
+
+    for p in parsed_list:
+        for t in p:
+            print(t.type)
+        print('**********')
 
 
-def recursive_parse(parser, line):
+def recursive_parse(parser, line, callback):
     parsed = parser.parse(line)
 
-    for token in line:
-        print(token.type)
-
-    print('*************')
-
     if not equal_ignore_order(parsed, line):
-        recursive_parse(parser, parsed)
+        recursive_parse(parser, parsed, callback)
+        if len(parsed) == 0:
+            callback(line)  
+
     else:
-        parser = Parser(syntax = Syntax().get_final_syntax())
+        parser = Parser(syntax=Syntax().get_syntax())
         parsed = parser.parse(parsed)
+        callback(parsed)
+        
 
-        for token in parsed:
-            print(token.type)
 
-        print('END OF LINE\n')
-
+def callback(parsed):
+    parsed_list.append(parsed)
 
 
 def equal_ignore_order(a, b):
-    """ Use only when elements are neither hashable nor sortable! """
     unmatched = list(b)
     for element in a:
         try:

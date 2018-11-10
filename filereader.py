@@ -31,7 +31,7 @@ class FileReader:
                         # re-append the brackets to ensure we are replacing the correct substring
                         original = '[' + f + ']'
                         lines[i] = lines[i].replace(
-                            original, original.replace(' ', '&nbsp'))
+                            original, original.replace(' ', '&nbsp')).strip()
 
                 except AttributeError:
                     # no matches found
@@ -41,7 +41,7 @@ class FileReader:
             # remove double spaces
             for i in range(len(lines)):
                 while('  ' in lines[i]):
-                    lines[i] = lines[i].replace('  ', ' ')
+                    lines[i] = lines[i].replace('  ', ' ').strip()
 
             return lines
 

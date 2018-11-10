@@ -61,7 +61,9 @@ class Syntax:
 
     DECLARATION_ASSIGNMENT = [
         [Token(type=Type.DECLARATION), Token(type=Type.WITH), Token(
-            type=Type.NUMBER)]
+            type=Type.NUMBER)],
+        [Token(type=Type.DECLARATION), Token(type=Type.WITH), Token(
+            type=Type.VAR)]
     ]
 
     # ACCEPT -> INPUT + VAR
@@ -117,10 +119,9 @@ class Syntax:
         }
         return syntax
 
-    
     def get_final_syntax(self):
         syntax = {
-            'E': (Type.E, Syntax.E),
+            # 'E': (Type.E, Syntax.E),
             'EXPRESSIONS': (Type.EXPRESSIONS, Syntax.EXPRESSIONS),
             'EXPRESSION': (Type.EXPRESSION, Syntax.EXPRESSION),
         }
