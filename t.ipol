@@ -1,0 +1,3 @@
+DSTR stringmo WITH [I have a pen] X
+DINT x WITH PLUS 1 MINUS 9 9
+GIVEYOU!! stringmo
