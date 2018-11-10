@@ -24,11 +24,6 @@ def main():
     # returns a 2d list containing the tokens per line of code
     tokens_list = tokenizer.tokenize(lines)
 
-    # for line in tokens_list:
-    #     for token in line:
-    #         print(token.type)
-    # print('$$$$$$$$$$')
-
     parser = Parser(syntax=Syntax().get_syntax())
 
     for line in tokens_list:
@@ -48,6 +43,10 @@ def recursive_parse(parser, line, callback):
         if len(parsed) == 0:
             callback(line)  
 
+    elif len(parsed) == 1:
+        parser = Parser(syntax=Syntax().get_final_syntax())
+        parsed = parser.parse(parsed)
+        callback(parsed)
     else:
         parser = Parser(syntax=Syntax().get_syntax())
         parsed = parser.parse(parsed)

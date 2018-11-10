@@ -2,6 +2,7 @@ import sys
 import re
 from enum import Enum
 
+
 class Tokenizer:
 
     def tokenize(self, lines):
@@ -54,8 +55,10 @@ class Token:
         if len(re.findall('\[(.+?)\]', val)) > 0:
             return Type.STR
 
-        if val == 'DSTR' or val == 'DINT':
-            return Type.DTYPE
+        if val == 'DSTR':
+            return Type.DTYPE_STR
+        elif val == 'DINT':
+            return Type.DTYPE_INT
         elif val == 'GIVEME?':
             return Type.INPUT
         elif val == 'GIVEYOU!' or val == 'GIVEYOU!!':
@@ -86,8 +89,7 @@ class Type(Enum):
         # char -> abc...123
         # word -> char | word + char
     VAR = 0
-    # DSTR, DINT
-    DTYPE = 1
+
     # GIVEME?
     INPUT = 2
     # GIVEYOU!, GIVEYOU!!
@@ -125,10 +127,18 @@ class Type(Enum):
     DISTANCE = 21
     PRINT = 22
     ACCEPT = 23
-    DECLARATION = 24
     ASSIGNMENT = 25
     VAL = 27
     NUMBER = 28
     NUMBERS = 29
     E = 30
     DECLARATION_ASSIGNMENT = 31
+
+    # DSTR, DINT
+    DTYPE_INT = 32
+    DTYPE_STR = 33
+    DTYPE_FLOAT = 34
+
+    DECLARATION_INT = 35
+    DECLARATION_STR = 36
+    DECLARATION_FLOAT = 37

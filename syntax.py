@@ -20,7 +20,8 @@ class Syntax:
     EXPRESSION = [
         [Token(type=Type.PRINT)],
         [Token(type=Type.ACCEPT)],
-        [Token(type=Type.DECLARATION)],
+        [Token(type=Type.DECLARATION_INT)],
+        [Token(type=Type.DECLARATION_STR)],
         [Token(type=Type.ASSIGNMENT)],
         [Token(type=Type.DECLARATION_ASSIGNMENT)],
 
@@ -43,7 +44,7 @@ class Syntax:
     # NUMBER -> RETURN_TYPE | VAL
     NUMBER = [
         [Token(type=Type.RETURN_TYPE)],
-        [Token(type=Type.VAL)],
+        [Token(type=Type.INT)],
         # VAR can be considered a number
         # [Token(type=Type.VAR)]
     ]
@@ -55,15 +56,19 @@ class Syntax:
     ]
 
     # DECLARATION -> DTYPE + VAR | DTYPE + VAR + WITH + NUMBER
-    DECLARATION = [
-        [Token(type=Type.DTYPE), Token(type=Type.VAR)],
+    DECLARATION_INT = [
+        [Token(type=Type.DTYPE_INT), Token(type=Type.VAR)],
+    ]
+
+    DECLARATION_STR = [
+        [Token(type=Type.DTYPE_STR), Token(type=Type.VAR)],
     ]
 
     DECLARATION_ASSIGNMENT = [
-        [Token(type=Type.DECLARATION), Token(type=Type.WITH), Token(
+        [Token(type=Type.DECLARATION_INT), Token(type=Type.WITH), Token(
             type=Type.NUMBER)],
-        [Token(type=Type.DECLARATION), Token(type=Type.WITH), Token(
-            type=Type.VAR)]
+        [Token(type=Type.DECLARATION_STR), Token(type=Type.WITH), Token(
+            type=Type.STR)]
     ]
 
     # ACCEPT -> INPUT + VAR
@@ -71,10 +76,11 @@ class Syntax:
         [Token(type=Type.INPUT), Token(type=Type.VAR)],
     ]
 
-    # PRINT -> OUTPUT + NUMBER | OUTPUT + VAR
+    # PRINT -> OUTPUT + NUMBER | OUTPUT + VAR | OUTPUT + STR
     PRINT = [
         [Token(type=Type.OUTPUT), Token(type=Type.NUMBER)],
         [Token(type=Type.OUTPUT), Token(type=Type.VAR)],
+        [Token(type=Type.OUTPUT), Token(type=Type.STR)],
     ]
 
     # ASSIGNMENT -> STORE + NUMBER + IN + VAR
@@ -99,18 +105,19 @@ class Syntax:
     DISTANCE = [
         [Token(type=Type.DIST), Token(type=Type.NUMBER),
          Token(type=Type.NUMBER), Token(type=Type.AND),
-         Token(type=Type.NUMBER), Token(type=Type.NUMBER), ]
+         Token(type=Type.NUMBER), Token(type=Type.NUMBER)]
     ]
 
     def get_syntax(self):
         syntax = {
             'RETURN_TYPE': (Type.RETURN_TYPE, Syntax.RETURN_TYPE),
-            'VAL': (Type.VAL, Syntax.VAL),
+            # 'VAL': (Type.VAL, Syntax.VAL),
             'NUMBER': (Type.NUMBER, Syntax.NUMBER),
             # 'NUMBERS': (Type.NUMBERS, Syntax.NUMBERS),
-            'DECLARATION': (Type.DECLARATION, Syntax.DECLARATION),
+            'DECLARATION_INT': (Type.DECLARATION_INT, Syntax.DECLARATION_INT),
+            'DECLARATION_STR': (Type.DECLARATION_STR, Syntax.DECLARATION_STR),
             'DECLARATION_ASSIGNMENT': (Type.DECLARATION_ASSIGNMENT, Syntax.DECLARATION_ASSIGNMENT),
-
+            'DISTANCE': (Type.DISTANCE, Syntax.DISTANCE),
             'ACCEPT': (Type.ACCEPT, Syntax.ACCEPT),
             'PRINT': (Type.PRINT, Syntax.PRINT),
             'ASSIGNMENT': (Type.ASSIGNMENT, Syntax.ASSIGNMENT),

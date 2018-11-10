@@ -10,12 +10,6 @@ class Parser:
         self.syntax = syntax
 
     def parse(self, line):
-
-        # push eval, if no matches, pop
-
-        # contains the parsed syntax
-        syntax_tree = []
-
         parsed = []
         buffer = []
 
