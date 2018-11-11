@@ -65,10 +65,10 @@ class Syntax:
     ]
 
     DECLARATION_ASSIGNMENT = [
+        [Token(type=Type.DECLARATION_STR), Token(type=Type.WITH), Token(
+            type=Type.STR)],
         [Token(type=Type.DECLARATION_INT), Token(type=Type.WITH), Token(
             type=Type.NUMBER)],
-        [Token(type=Type.DECLARATION_STR), Token(type=Type.WITH), Token(
-            type=Type.STR)]
     ]
 
     # ACCEPT -> INPUT + VAR
@@ -129,7 +129,7 @@ class Syntax:
     def get_final_syntax(self):
         syntax = {
             # 'E': (Type.E, Syntax.E),
-            'EXPRESSIONS': (Type.EXPRESSIONS, Syntax.EXPRESSIONS),
+            # 'EXPRESSIONS': (Type.EXPRESSIONS, Syntax.EXPRESSIONS),
             'EXPRESSION': (Type.EXPRESSION, Syntax.EXPRESSION),
         }
         return syntax

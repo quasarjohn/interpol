@@ -8,8 +8,13 @@ from tokenizer import Type
 from myparser import Parser
 from pprint import pprint
 from syntax import Syntax
+from ipolexception import ExceptionCheker
+from ipolexception import IpolException
 
 parsed_list = []
+final_parsed_list = []
+exceptions = []
+
 
 def main():
     print('Welcome to IPOL interpreter!')
@@ -30,44 +35,64 @@ def main():
     for line in tokens_list:
         recursive_parse(parser, line, callback)
 
-    # print parsed list for debugging purposes
-    for p in parsed_list:
-        for t in p:
-            print(t.type)
-        print('**********')
-        
+    parser = Parser(syntax=Syntax().get_final_syntax())
+
+    # final stage of parsing. Parse to an expression to see if it is valid
+    for line in parsed_list:
+        recursive_parse(parser, line, callback1)
+
+    exception_checker = ExceptionCheker()
+
+    for i in range(len(final_parsed_list)):
+        # there must be a syntax error because it cannot be converted to a single statement
+        # check which kind of exception it is
+        if len(final_parsed_list[i]) > 1:
+            exception = exception_checker.check_exception(final_parsed_list[i], i)
+
+            if isinstance(exception, IpolException):
+                exceptions.append(exception)
+
+    if len(exceptions) > 0:
+        for exception in exceptions:
+            print('Error on line ' + str(exception.line_number + 1),
+                  '.', exception.type, '.', exception.message)
+    else:
+        print('Build complete')
+
+    for line in final_parsed_list:
+        for token in line:
+            print(token.type)
 
 
 def recursive_parse(parser, line, callback):
     parsed = parser.parse(line)
-
     # parse the line
     if not equal_ignore_order(parsed, line):
         recursive_parse(parser, parsed, callback)
         # if the line can no longer be parsed, the result will return an empty list
         # thus, just return the previous unparsed list
         if len(parsed) == 0:
-            callback(line)  
-
-    # the tokens have been parsed to a single statement ie. PRINT, ARITH_OP, etc
-    # convert these to STATEMENT or STATEMENTS for the final parsing
-    elif len(parsed) == 1:
-        parser = Parser(syntax=Syntax().get_final_syntax())
-        parsed = parser.parse(parsed)
-        callback(parsed)
+            callback(line)
     # the parsing returned the same result ie. NUMBER can be parsed as NUMBER and so on
     # just return the parsed list and end the loop
     else:
         parser = Parser(syntax=Syntax().get_syntax())
         parsed = parser.parse(parsed)
         callback(parsed)
-        
+
 # callback function for getting the parsed list
+
+
 def callback(parsed):
     parsed_list.append(parsed)
 
+def callback1(parsed):
+    final_parsed_list.append(parsed)
+
 # checks if the returned parsed list is equal to the input list
 # which means the list can no longer be parsed
+
+
 def equal_ignore_order(a, b):
     unmatched = list(b)
     for element in a:

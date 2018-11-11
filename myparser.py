@@ -13,6 +13,20 @@ class Parser:
         parsed = []
         buffer = []
 
+        if len(line) > 0:
+            if line[0].type == Type.MEAN:
+                is_mean_op = True
+                for token in line[1:]:
+                    if not token.type == Type.NUMBER and not token.type == Type.VAR:
+                        is_mean_op = False
+                if is_mean_op:
+                    p = Token(type=Type.EXPRESSION)
+                    p.val = buffer
+                    parsed.append(p)
+                    buffer.clear()
+                    return parsed
+
+
         for token in line:
             # push the token to the buffer
             buffer.append(token)
