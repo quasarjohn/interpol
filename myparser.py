@@ -20,7 +20,7 @@ class Parser:
                     if not token.type == Type.NUMBER and not token.type == Type.VAR:
                         is_mean_op = False
                 if is_mean_op:
-                    p = Token(type=Type.EXPRESSION)
+                    p = Token(type=Type.AVERAGE)
                     p.val = buffer
                     parsed.append(p)
                     buffer.clear()

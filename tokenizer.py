@@ -69,7 +69,7 @@ class Token:
             return Type.IN
         elif val == 'STORE':
             return Type.STORE
-        elif val == 'PLUS' or val == 'MINUS' or val == 'TIME' or val == 'DIVBY' or val == 'MODU' or val == 'EXP' or val == 'ROOT':
+        elif val == 'PLUS' or val == 'MINUS' or val == 'TIME' or val == 'DIVBY' or val == 'MODU' or val == 'EXP' or val == 'ROOT' or val == 'RAISE':
             return Type.ARITHMETIC
         elif val == 'MEAN':
             return Type.MEAN
@@ -86,8 +86,8 @@ class Token:
 
 
 class Type(Enum):
-        # char -> abc...123
-        # word -> char | word + char
+    # char -> abc...123
+    # word -> char | word + char
     VAR = 0
 
     # GIVEME?
