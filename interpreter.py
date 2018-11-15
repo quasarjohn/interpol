@@ -65,7 +65,8 @@ def main():
 
         if isinstance(generated_code, list):
             runnable_code = '\n'.join(generated_code)
-            print(runnable_code)
+
+            exec(runnable_code, globals())
         else:
             print('Build failed')
 
@@ -73,7 +74,7 @@ def main():
     
 
     
-    # exec(runnable_code)
+    
 
 def recursive_parse(parser, line, callback):
     parsed = parser.parse(line)

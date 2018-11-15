@@ -67,12 +67,27 @@ class CodeGenerator:
                             ExceptionType.INCOMPATIBLE_DATA_TYPE_INT, line, line_number)
                         exception.print()
                     else:
-                        converted_line = var_name + ' = ' + self.generate_simple_expression(line[1:len(line) - 2])
+                        converted_line = var_name + ' = ' + \
+                            self.generate_simple_expression(
+                                line[1:len(line) - 2])
                 except:
                     # variable was not declared
                     exception = IpolException(
                         ExceptionType.VARIABLE_NOT_DECLARED, line, line_number)
                     exception.print()
+            elif line[0].type == Type.INPUT:
+                var_name = line[1].val
+                
+                data_type = variables[var_name]
+                is_int = False
+
+                # check if the user is entering a valid value
+                # if the data type of the variable is int, cast the number to int
+                if data_type == Type.DTYPE_INT:
+                   is_int = True
+                
+                converted_line = var_name + \
+                    ' = request_input({}, {})'.format("\'" + var_name + "\'", is_int)
 
             else:
                 converted_line = self.generate_simple_expression(line)
@@ -101,13 +116,14 @@ class CodeGenerator:
                     converted_line = converted_line.replace(
                         placeholders[index], '(&n0 ' + operator + ' &n1)')
                     index = 0
-            elif token.type == Type.INT:
+            elif token.type == Type.INT or token.type == Type.VAR:
                 converted_line = converted_line.replace(
                     placeholders[index], token.val)
                 index = index + 1
             elif token.type == Type.OUTPUT:
+                print_type = 'print(&n0, end=" ")' if token.val == 'GIVEYOU!' else 'print(&n0)'
                 converted_line = converted_line.replace(
-                    '&n0', 'print(&n0, end=" ")')
+                    '&n0', print_type)
                 index = 0
         return converted_line
 
@@ -129,4 +145,38 @@ class CodeGenerator:
         return """
 def root(i, j):
     return j ** (1 / i)
+
+def is_float(input):
+    try:
+        num = float(input)
+    except ValueError:
+        return False
+    return True
+
+def is_int(input):
+    try:
+        num = int(input)
+    except ValueError:
+        return False
+    return True
+
+def request_input(var_name, int_dtype):
+    message = '. (Must be string)'
+    if int_dtype:
+        message = '. (Must be integer)'
+
+    # if type is 0, request int, else request str
+    val = input('Enter value for ' + var_name  + message + '\\n')
+
+    if int_dtype and not is_int(val):
+        val = request_input(var_name, type)
+        return val
+
+    return val
 """
+
+
+    
+
+
+    
