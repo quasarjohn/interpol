@@ -1,6 +1,3 @@
-test = {
-    'j': 'heart',
-    'g': 'lungs'
-}
+l = ['STORE', 'PLUS', '2', '3', 'IN', 'X']
 
-print(test['n'])
+print(l[1:len(l) - 2])

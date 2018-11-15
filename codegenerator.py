@@ -1,4 +1,6 @@
 from tokenizer import Type
+from ipolexception import IpolException
+from ipolexception import ExceptionType
 
 
 class CodeGenerator:
@@ -29,19 +31,49 @@ class CodeGenerator:
 
                 try:
                     variables[var_name]
-                    print('Error on line ' + str(line_number)  + '. Variable `' + var_name + '` has already been declared')
+                    print('Error on line ' + str(line_number) +
+                          '. Variable `' + var_name + '` has already been declared')
                 except Exception:
                     no_error = True
                     variables[var_name] = data_type
 
                 variables[var_name] = data_type
-                
+
                 # check if this is an assignment
                 if len(line) > 2 and no_error:
                     converted_line = var_name + ' = ' + \
                         self.generate_simple_expression(line[2:])
+                elif len(line) == 2:
+                    pass
                 else:
                     return False
+
+            elif line[0].type == Type.STORE:
+                # STORE data in VAR
+                # either Type.STR or Type.INT
+                data = line[1]
+                var_name = line[len(line) - 1].val
+                print(var_name)
+                print(variables[var_name])
+
+                try:
+                    data_type = variables[var_name]
+                    if data_type == Type.DTYPE_INT and data.type == Type.STR:
+                        exception = IpolException(
+                            ExceptionType.INCOMPATIBLE_DATA_TYPE_INT, line, line_number)
+                        exception.print()
+                    elif data_type == Type.DECLARATION_STR and not data.type == Type.STR:
+                        exception = IpolException(
+                            ExceptionType.INCOMPATIBLE_DATA_TYPE_INT, line, line_number)
+                        exception.print()
+                    else:
+                        converted_line = var_name + ' = ' + self.generate_simple_expression(line[1:len(line) - 2])
+                except:
+                    # variable was not declared
+                    exception = IpolException(
+                        ExceptionType.VARIABLE_NOT_DECLARED, line, line_number)
+                    exception.print()
+
             else:
                 converted_line = self.generate_simple_expression(line)
 

@@ -57,8 +57,7 @@ def main():
 
     if len(exceptions) > 0:
         for exception in exceptions:
-            print('Error on line ' + str(exception.line_number + 1),
-                  '.', exception.type, '.', exception.message)
+            exception.print()
     else:
         # there are no exceptions
         # continue with code generation

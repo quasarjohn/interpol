@@ -24,6 +24,12 @@ class IpolException:
             return 'DINT data type must hold integer value.'
         elif self.type == ExceptionType.INCOMPATIBLE_DATA_TYPE_STR:
             return 'DSTR data type must hold string value.'
+        elif self.type == ExceptionType.VARIABLE_NOT_DECLARED:
+            return 'Variable is not declared.'
+
+    def print(self):
+        print('Error on line ' + str(self.line_number + 1),
+                  '.', self.type, '.', self.message)
 
 
 class ExceptionType(Enum):
@@ -46,11 +52,12 @@ class ExceptionType(Enum):
     INCOMPATIBLE_DATA_TYPE_INT = 4
     INCOMPATIBLE_DATA_TYPE_STR = 5
 
+    VARIABLE_NOT_DECLARED = 6
+
 
 class ExceptionCheker:
 
     def check_exception(self, tokens, line):
-        print(tokens[1].type)
 
         for token in tokens:
             # ipol does not support float data type
