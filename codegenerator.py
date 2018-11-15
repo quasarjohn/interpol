@@ -169,10 +169,11 @@ def request_input(var_name, int_dtype):
     val = input('Enter value for ' + var_name  + message + '\\n')
 
     if int_dtype and not is_int(val):
+        print('Incorrect input. Please try again.')
         val = request_input(var_name, type)
         return val
 
-    return val
+    return int(val)
 """
 
 

@@ -93,6 +93,12 @@ class Syntax:
     ARITH_OP = [
         [Token(type=Type.ARITHMETIC), Token(
             type=Type.NUMBER), Token(type=Type.NUMBER)],
+        [Token(type=Type.ARITHMETIC), Token(
+            type=Type.VAR), Token(type=Type.NUMBER)],
+        [Token(type=Type.ARITHMETIC), Token(
+            type=Type.NUMBER), Token(type=Type.VAR)],
+        [Token(type=Type.ARITHMETIC), Token(
+            type=Type.VAR), Token(type=Type.VAR)],
     ]
 
     # AVERAGE -> MEAN + NUMBERS
