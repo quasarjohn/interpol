@@ -21,7 +21,7 @@ class Parser:
                         is_mean_op = False
                 if is_mean_op:
                     p = Token(type=Type.AVERAGE)
-                    p.val = buffer
+                    p.val = buffer.copy()
                     parsed.append(p)
                     buffer.clear()
                     return parsed
@@ -50,7 +50,7 @@ class Parser:
                     if len(x) == len(buffer):
                         # todo convert the token
                         t = Token(type=matches[m][0])
-                        t.val = buffer
+                        t.val = buffer.copy()
 
                         # then pop it
                         parsed.append(t)

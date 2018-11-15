@@ -10,6 +10,7 @@ from pprint import pprint
 from syntax import Syntax
 from ipolexception import ExceptionCheker
 from ipolexception import IpolException
+from codegenerator import CodeGenerator
 
 parsed_list = []
 final_parsed_list = []
@@ -27,6 +28,7 @@ def main():
     tokenizer = Tokenizer()
     # returns a 2d list containing the tokens per line of code
     tokens_list = tokenizer.tokenize(lines)
+    tokens_list_copy = tokens_list.copy()
 
     # create instance of the parser with the syntax declared in Syntax class
     parser = Parser(syntax=Syntax().get_syntax())
@@ -47,7 +49,8 @@ def main():
         # there must be a syntax error because it cannot be converted to a single statement
         # check which kind of exception it is
         if len(final_parsed_list[i]) > 1:
-            exception = exception_checker.check_exception(final_parsed_list[i], i)
+            exception = exception_checker.check_exception(
+                final_parsed_list[i], i)
 
             if isinstance(exception, IpolException):
                 exceptions.append(exception)
@@ -59,13 +62,24 @@ def main():
     else:
         print('Build complete')
 
-    for line in final_parsed_list:
+    for line in tokens_list_copy:
         for token in line:
             print(token.type)
+        print('################')
 
+    generated_code = CodeGenerator().generate(tokens_list_copy)
+
+    for code in generated_code:
+        print(code)
 
 def recursive_parse(parser, line, callback):
     parsed = parser.parse(line)
+
+    # for token in parsed:
+    #     print(token.type, token.val)
+
+    # print('**************************')
+
     # parse the line
     if not equal_ignore_order(parsed, line):
         recursive_parse(parser, parsed, callback)
@@ -76,15 +90,16 @@ def recursive_parse(parser, line, callback):
     # the parsing returned the same result ie. NUMBER can be parsed as NUMBER and so on
     # just return the parsed list and end the loop
     else:
-        parser = Parser(syntax=Syntax().get_syntax())
-        parsed = parser.parse(parsed)
-        callback(parsed)
+        # parser = Parser(syntax=Syntax().get_syntax())
+        # parsed = parser.parse(parsed)
+        callback(line)
 
 # callback function for getting the parsed list
 
 
 def callback(parsed):
     parsed_list.append(parsed)
+
 
 def callback1(parsed):
     final_parsed_list.append(parsed)
