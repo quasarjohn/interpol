@@ -12,13 +12,11 @@ class CodeGenerator:
         # generate helper functions for the generated python code
         generated_code.append(self.get_helper_functions())
 
-        
-
         # dictionary containing the variables and their data types
         variables = {}
         # iterate the lines
-        for line in tokens_list:
-            
+        for line_number, line in enumerate(tokens_list):
+
             converted_line = ''
             # check if the line is a declaration of a variable so we can keep
             # track of all the varaibles used in the generated code
@@ -27,10 +25,23 @@ class CodeGenerator:
                 data_type = line[0].type
                 var_name = line[1].val
 
+                no_error = False
+
+                try:
+                    variables[var_name]
+                    print('Error on line ' + str(line_number)  + '. Variable `' + var_name + '` has already been declared')
+                except Exception:
+                    no_error = True
+                    variables[var_name] = data_type
+
                 variables[var_name] = data_type
+                
                 # check if this is an assignment
-                if len(line) > 2:
-                    converted_line = var_name + ' = ' + self.generate_simple_expression(line[2:])
+                if len(line) > 2 and no_error:
+                    converted_line = var_name + ' = ' + \
+                        self.generate_simple_expression(line[2:])
+                else:
+                    return False
             else:
                 converted_line = self.generate_simple_expression(line)
 
@@ -43,7 +54,7 @@ class CodeGenerator:
 
         # this counter is used to move between &n0 and &n1
         index = 0
-        
+
         # start with a single point
         converted_line = '&n0'
 

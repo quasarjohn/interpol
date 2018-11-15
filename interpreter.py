@@ -60,17 +60,20 @@ def main():
             print('Error on line ' + str(exception.line_number + 1),
                   '.', exception.type, '.', exception.message)
     else:
-        print('Build complete')
+        # there are no exceptions
+        # continue with code generation
+        generated_code = CodeGenerator().generate(tokens_list_copy)
 
-    for line in tokens_list_copy:
-        for token in line:
-            print(token.type, end = ", ")
-        print('')
+        if isinstance(generated_code, list):
+            runnable_code = '\n'.join(generated_code)
+            print(runnable_code)
+        else:
+            print('Build failed')
 
-    generated_code = CodeGenerator().generate(tokens_list_copy)
 
-    runnable_code = '\n'.join(generated_code)
-    print(runnable_code)
+    
+
+    
     # exec(runnable_code)
 
 def recursive_parse(parser, line, callback):

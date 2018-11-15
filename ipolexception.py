@@ -2,6 +2,7 @@ from enum import Enum
 from tokenizer import Type
 from tokenizer import Token
 
+
 class IpolException:
 
     def __init__(self, type, tokens, line_number):
@@ -19,6 +20,10 @@ class IpolException:
             return 'Illegal argument on mean function. Only integers are allowed'
         elif self.type == ExceptionType.NOT_A_STATEMENT:
             return 'The statement cannot be parsed.'
+        elif self.type == ExceptionType.INCOMPATIBLE_DATA_TYPE_INT:
+            return 'DINT data type must hold integer value.'
+        elif self.type == ExceptionType.INCOMPATIBLE_DATA_TYPE_STR:
+            return 'DSTR data type must hold string value.'
 
 
 class ExceptionType(Enum):
@@ -38,10 +43,14 @@ class ExceptionType(Enum):
     # this cannot be further simplified and will throw an exception
     NOT_A_STATEMENT = 3
 
+    INCOMPATIBLE_DATA_TYPE_INT = 4
+    INCOMPATIBLE_DATA_TYPE_STR = 5
+
 
 class ExceptionCheker:
 
     def check_exception(self, tokens, line):
+        print(tokens[1].type)
 
         for token in tokens:
             # ipol does not support float data type
@@ -62,7 +71,15 @@ class ExceptionCheker:
                 if not token.type == Type.NUMBER:
                     return IpolException(ExceptionType.ILLEGAL_ARGUMENT, tokens, line)
 
-        
+        elif tokens[0].type == Type.EXPRESSION:
+            ts = tokens[0].val
+            if ts[0].type == Type.DECLARATION_INT and tokens[2].type == Type.STR:
+                return IpolException(ExceptionType.INCOMPATIBLE_DATA_TYPE_INT, tokens, line)
+            elif ts[0].type == Type.DECLARATION_STR and not tokens[2].type == Type.STR:
+                return IpolException(ExceptionType.INCOMPATIBLE_DATA_TYPE_STR, tokens, line)
+
+
+
         return IpolException(ExceptionType.NOT_A_STATEMENT, tokens, line)
 
 

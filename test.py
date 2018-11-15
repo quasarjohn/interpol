@@ -1,4 +1,6 @@
-def root(i, j):
-    return i + j
+test = {
+    'j': 'heart',
+    'g': 'lungs'
+}
 
-print((3 + (2 - root(1, 2))))
+print(test['n'])
