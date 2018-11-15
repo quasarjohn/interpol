@@ -1,7 +1,4 @@
-import re
+def root(i, j):
+    return i + j
 
-arr = ['a', 'b', 'c', 'd', 'e']
-
-arr_part = arr[1:]
-
-print(arr_part)
+print((3 + (2 - root(1, 2))))

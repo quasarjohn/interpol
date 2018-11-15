@@ -6,24 +6,67 @@ class CodeGenerator:
     # returns a string format and the value of the expression
     def generate(self, tokens_list):
 
+        # append generated code here
         generated_code = []
+
+        # generate helper functions for the generated python code
+        generated_code.append(self.get_helper_functions())
+
+        
+
+        # dictionary containing the variables and their data types
+        variables = {}
+        # iterate the lines
+        for line in tokens_list:
+            
+            converted_line = ''
+            # check if the line is a declaration of a variable so we can keep
+            # track of all the varaibles used in the generated code
+            if line[0].type == Type.DTYPE_INT or line[0].type == Type.DECLARATION_STR:
+                # this is a variable declaration
+                data_type = line[0].type
+                var_name = line[1].val
+
+                variables[var_name] = data_type
+                # check if this is an assignment
+                if len(line) > 2:
+                    converted_line = var_name + ' = ' + self.generate_simple_expression(line[2:])
+            else:
+                converted_line = self.generate_simple_expression(line)
+
+            generated_code.append(converted_line)
+        return generated_code
+
+    def generate_simple_expression(self, line):
+        # used for generating arithmetic operations involving two integers
         placeholders = ['&n0', '&n1']
 
-        for line in tokens_list:
-            index = 0
-            converted_line = '&n0'
-            for token in line:
-                if token.type == Type.ARITHMETIC:
+        # this counter is used to move between &n0 and &n1
+        index = 0
+        
+        # start with a single point
+        converted_line = '&n0'
+
+        for token in line:
+            if token.type == Type.ARITHMETIC:
+                if token.val == 'ROOT':
+                    converted_line = converted_line.replace(
+                        placeholders[index], 'root(&n0, &n1)')
+                    index = 0
+                else:
                     operator = self.get_operation(token)
                     converted_line = converted_line.replace(
                         placeholders[index], '(&n0 ' + operator + ' &n1)')
                     index = 0
-                elif token.type == Type.INT:
-                    converted_line = converted_line.replace(
-                        placeholders[index], token.val)
-                    index = index + 1
-            generated_code.append(converted_line)
-        return generated_code
+            elif token.type == Type.INT:
+                converted_line = converted_line.replace(
+                    placeholders[index], token.val)
+                index = index + 1
+            elif token.type == Type.OUTPUT:
+                converted_line = converted_line.replace(
+                    '&n0', 'print(&n0, end=" ")')
+                index = 0
+        return converted_line
 
     def get_operation(self, token):
         if token.val == 'PLUS':
@@ -36,3 +79,11 @@ class CodeGenerator:
             return '/'
         elif token.val == 'MODU':
             return '%'
+        elif token.val == 'RAISE':
+            return '**'
+
+    def get_helper_functions(self):
+        return """
+def root(i, j):
+    return j ** (1 / i)
+"""

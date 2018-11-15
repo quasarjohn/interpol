@@ -64,13 +64,14 @@ def main():
 
     for line in tokens_list_copy:
         for token in line:
-            print(token.type)
-        print('################')
+            print(token.type, end = ", ")
+        print('')
 
     generated_code = CodeGenerator().generate(tokens_list_copy)
 
-    for code in generated_code:
-        print(code)
+    runnable_code = '\n'.join(generated_code)
+    print(runnable_code)
+    # exec(runnable_code)
 
 def recursive_parse(parser, line, callback):
     parsed = parser.parse(line)
