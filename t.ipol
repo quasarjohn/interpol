@@ -1,3 +1,3 @@
-DSTR X WITH [hahaha]
-STORE [hahaha = wow] IN X
-GIVEYOU! X
+DINT X WITH 3
+DINT Y WITH 5
+GIVEYOU! PLUS X Y

@@ -66,6 +66,7 @@ def main():
         # this may return a bool data type
         if isinstance(generated_code, list):
             runnable_code = '\n'.join(generated_code)
+            # print(runnable_code)
 
             exec(runnable_code, globals())
         # if bool is returned, that means there was something wrong with the ipol code

@@ -121,7 +121,6 @@ class Syntax:
             'RETURN_TYPE': (Type.RETURN_TYPE, Syntax.RETURN_TYPE),
             # 'VAL': (Type.VAL, Syntax.VAL),
             'NUMBER': (Type.NUMBER, Syntax.NUMBER),
-            # 'NUMBERS': (Type.NUMBERS, Syntax.NUMBERS),
             'DECLARATION_INT': (Type.DECLARATION_INT, Syntax.DECLARATION_INT),
             'DECLARATION_STR': (Type.DECLARATION_STR, Syntax.DECLARATION_STR),
             'DECLARATION_ASSIGNMENT': (Type.DECLARATION_ASSIGNMENT, Syntax.DECLARATION_ASSIGNMENT),
@@ -139,6 +138,7 @@ class Syntax:
             # 'E': (Type.E, Syntax.E),
             # 'EXPRESSIONS': (Type.EXPRESSIONS, Syntax.EXPRESSIONS),
             'EXPRESSION': (Type.EXPRESSION, Syntax.EXPRESSION),
+            
         }
         return syntax
     """
