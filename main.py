@@ -80,7 +80,7 @@ def main():
         # check syntax in class Syntax
         # Type.E means accepted
         if ipol_code_verified[0][0].type == Type.E:
-            print('Build Successful')
+            print('Build Successful\n')
         else:
             print('Build Failed. Double check the starting and ending statements.')
             return
@@ -98,6 +98,14 @@ def main():
             # print(runnable_code)
 
             exec(runnable_code, globals())
+
+            print('\n\n****************')
+            print(Syntax().get_cfg())
+
+            for line in tokens_list:
+                for token in line:
+                    print(token.val, ':', token.type, end = ', ')
+                print('')
         # if bool is returned, that means there was something wrong with the ipol code
         else:
             print('Build failed')
