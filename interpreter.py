@@ -70,6 +70,10 @@ def main():
         else:
             print('Build failed')
 
+    # for line in tokens_list:
+    #     for token in line:
+    #         print(token.type, token.val, end = " $ ")
+
 
     
 

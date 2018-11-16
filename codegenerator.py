@@ -22,7 +22,7 @@ class CodeGenerator:
             converted_line = ''
             # check if the line is a declaration of a variable so we can keep
             # track of all the varaibles used in the generated code
-            if line[0].type == Type.DTYPE_INT or line[0].type == Type.DECLARATION_STR:
+            if line[0].type == Type.DTYPE_INT or line[0].type == Type.DTYPE_STR:
                 # this is a variable declaration
                 data_type = line[0].type
                 var_name = line[1].val
@@ -37,14 +37,19 @@ class CodeGenerator:
                     no_error = True
                     variables[var_name] = data_type
 
+
                 variables[var_name] = data_type
 
                 # check if this is an assignment
                 if len(line) > 2 and no_error:
                     converted_line = var_name + ' = ' + \
-                        self.generate_simple_expression(line[2:])
+                        self.generate_simple_expression(line[2:], variables)
                 elif len(line) == 2:
-                    pass
+                    # if no value is declared, give a default of 0
+                    if line[0].type == Type.DTYPE_INT:
+                        converted_line = var_name + ' = 0'
+                    else:
+                        converted_line = var_name + ' = ""'
                 else:
                     return False
 
@@ -53,8 +58,6 @@ class CodeGenerator:
                 # either Type.STR or Type.INT
                 data = line[1]
                 var_name = line[len(line) - 1].val
-                print(var_name)
-                print(variables[var_name])
 
                 try:
                     data_type = variables[var_name]
@@ -69,7 +72,7 @@ class CodeGenerator:
                     else:
                         converted_line = var_name + ' = ' + \
                             self.generate_simple_expression(
-                                line[1:len(line) - 2])
+                                line[1:len(line) - 2], variables)
                 except:
                     # variable was not declared
                     exception = IpolException(
@@ -77,25 +80,29 @@ class CodeGenerator:
                     exception.print()
             elif line[0].type == Type.INPUT:
                 var_name = line[1].val
-                
+
                 data_type = variables[var_name]
                 is_int = False
 
                 # check if the user is entering a valid value
                 # if the data type of the variable is int, cast the number to int
                 if data_type == Type.DTYPE_INT:
-                   is_int = True
-                
+                    is_int = True
+
                 converted_line = var_name + \
-                    ' = request_input({}, {})'.format("\'" + var_name + "\'", is_int)
+                    ' = request_input({}, {})'.format(
+                        "\'" + var_name + "\'", is_int)
 
             else:
-                converted_line = self.generate_simple_expression(line)
+                converted_line = self.generate_simple_expression(
+                    line, variables)
+                if not converted_line:
+                    return False
 
             generated_code.append(converted_line)
         return generated_code
 
-    def generate_simple_expression(self, line):
+    def generate_simple_expression(self, line, variables):
         # used for generating arithmetic operations involving two integers
         placeholders = ['&n0', '&n1']
 
@@ -105,7 +112,7 @@ class CodeGenerator:
         # start with a single point
         converted_line = '&n0'
 
-        for token in line:
+        for line_number, token in enumerate(line):
             if token.type == Type.ARITHMETIC:
                 if token.val == 'ROOT':
                     converted_line = converted_line.replace(
@@ -116,10 +123,25 @@ class CodeGenerator:
                     converted_line = converted_line.replace(
                         placeholders[index], '(&n0 ' + operator + ' &n1)')
                     index = 0
-            elif token.type == Type.INT or token.type == Type.VAR:
+            elif token.type == Type.INT:
                 converted_line = converted_line.replace(
                     placeholders[index], token.val)
                 index = index + 1
+            elif token.type == Type.STR:
+                formatted_str = "'" + token.val[1:len(token.val) - 1] +  "'"
+                converted_line = converted_line.replace(
+                    placeholders[index], formatted_str)
+                index = index + 1
+            elif token.type == Type.VAR:
+                try:
+                    converted_line = converted_line.replace(
+                        placeholders[index], token.val)
+                    index = index + 1
+                except:
+                    exception = IpolException(
+                        ExceptionType.VARIABLE_NOT_DECLARED, line, line_number)
+                    exception.print()
+                    return False
             elif token.type == Type.OUTPUT:
                 print_type = 'print(&n0, end=" ")' if token.val == 'GIVEYOU!' else 'print(&n0)'
                 converted_line = converted_line.replace(
@@ -175,9 +197,3 @@ def request_input(var_name, int_dtype):
 
     return int(val)
 """
-
-
-    
-
-
-    
