@@ -26,6 +26,8 @@ class IpolException:
             return 'DSTR data type must hold string value.'
         elif self.type == ExceptionType.VARIABLE_NOT_DECLARED:
             return 'Variable is not declared.'
+        elif self.type == ExceptionType.UNUSED_VALUE_ERROR:
+            return 'The value is neither printed nor assigned to any variable.'
 
     def print(self):
         print('Error on line ' + str(self.line_number + 1),
@@ -53,6 +55,8 @@ class ExceptionType(Enum):
     INCOMPATIBLE_DATA_TYPE_STR = 5
 
     VARIABLE_NOT_DECLARED = 6
+
+    UNUSED_VALUE_ERROR = 7
 
 
 class ExceptionCheker:

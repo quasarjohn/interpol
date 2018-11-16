@@ -11,10 +11,13 @@ from syntax import Syntax
 from ipolexception import ExceptionCheker
 from ipolexception import IpolException
 from codegenerator import CodeGenerator
+from ipolexception import ExceptionType
 
 parsed_list = []
 final_parsed_list = []
+ipol_code_verified = []
 exceptions = []
+
 
 def main():
     print('Welcome to IPOL interpreter!')
@@ -36,6 +39,7 @@ def main():
     for line in tokens_list:
         recursive_parse(parser, line, callback)
 
+    # create a new instance of the parser now with the syntax for recuding operations to expressions
     parser = Parser(syntax=Syntax().get_final_syntax())
 
     # final stage of parsing. Parse to an expression to see if it is valid
@@ -54,13 +58,38 @@ def main():
             if isinstance(exception, IpolException):
                 exceptions.append(exception)
 
+    # now check if the overall structure of the code is valid
+    # check if there are unused values
+    for index, token in enumerate(reduce(final_parsed_list)):
+        if token.type == Type.NUMBER or token.type == Type.STR:
+            exceptions.append(IpolException(
+                ExceptionType.UNUSED_VALUE_ERROR, None, index))
+
     # print exceptions if there are any and halt the build process
     if len(exceptions) > 0:
         for exception in exceptions:
             exception.print()
+        return
     else:
+        # create a new instance of the parser now with the syntax of the overall ipol code
+        parser = Parser(syntax=Syntax().get_ipol_syntax())
+
+        # finally, verify that the full code is valid
+        recursive_parse(parser, reduce(final_parsed_list), callback2)
+
+        # check syntax in class Syntax
+        # Type.E means accepted
+        if ipol_code_verified[0][0].type == Type.E:
+            print('Build Successful')
+        else:
+            print('Build Failed. Double check the starting and ending statements.')
+            return
+
         # there are no exceptions
         # continue with code generation
+        tokens_list_copy.pop(0)
+        tokens_list_copy.pop(len(tokens_list_copy) - 1)
+
         generated_code = CodeGenerator().generate(tokens_list_copy)
 
         # this may return a bool data type
@@ -72,11 +101,6 @@ def main():
         # if bool is returned, that means there was something wrong with the ipol code
         else:
             print('Build failed')
-
-    # for line in tokens_list:
-    #     for token in line:
-    #         print(token.type, token.val, end = " $ ")
-
 
 def recursive_parse(parser, line, callback):
     parsed = parser.parse(line)
@@ -102,6 +126,9 @@ def callback(parsed):
 def callback1(parsed):
     final_parsed_list.append(parsed)
 
+def callback2(parsed):
+    ipol_code_verified.append(parsed)
+
 # checks if the returned parsed list is equal to the input list
 # which means the list can no longer be parsed
 def equal_ignore_order(a, b):
@@ -112,6 +139,30 @@ def equal_ignore_order(a, b):
         except ValueError:
             return False
     return not unmatched
+
+# checks wether the series of code are valid ipol code
+# E ->  CRETE, EXPRESSIONS, RUPTURE
+def reduce(parsed_list):
+    # reduce the lines to a single line so we can perform derivation on the tokens
+    """
+    from
+    CREATE
+    EXPRESSION
+    EXPRESSION...
+    RUPTURE 
+
+    to 
+    CREATE EXPRESSION EXPRESSION RUPTURE
+    """
+
+    single_line_parsed_list = []
+
+    for line in parsed_list:
+        for token in line:
+            single_line_parsed_list.append(token)
+
+    return single_line_parsed_list
+
 
 if __name__ == "__main__":
     main()

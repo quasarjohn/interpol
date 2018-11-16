@@ -13,7 +13,9 @@ class Syntax:
     # EXPRESSIONS -> EXPRESSION | EXPRESSION + EXPRESSIONS
     EXPRESSIONS = [
         [Token(type=Type.EXPRESSION)],
-        [Token(type=Type.EXPRESSION), Token(type=Type.EXPRESSIONS)]
+        [Token(type=Type.EXPRESSION), Token(type=Type.EXPRESSIONS)],
+        [Token(type=Type.EXPRESSIONS), Token(type=Type.EXPRESSIONS)]
+
     ]
 
     # EXPRESSION -> PRINT | ACCEPT | DECLARATION | ASSIGNMENT | RETURN_TYPE
@@ -138,9 +140,16 @@ class Syntax:
             # 'E': (Type.E, Syntax.E),
             # 'EXPRESSIONS': (Type.EXPRESSIONS, Syntax.EXPRESSIONS),
             'EXPRESSION': (Type.EXPRESSION, Syntax.EXPRESSION),
-            
         }
         return syntax
+
+    def get_ipol_syntax(self):
+        syntax = {
+            'E': (Type.E, Syntax.E),
+            'EXPRESSIONS': (Type.EXPRESSIONS, Syntax.EXPRESSIONS),
+        }
+        return syntax
+
     """
     Example...
 
