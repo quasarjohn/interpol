@@ -87,6 +87,8 @@ class Syntax:
     ASSIGNMENT = [
         [Token(type=Type.STORE), Token(type=Type.NUMBER),
          Token(type=Type.IN), Token(type=Type.VAR)],
+        [Token(type=Type.STORE), Token(type=Type.STR),
+         Token(type=Type.IN), Token(type=Type.VAR)],
     ]
 
     # ARITH_OP -> ARITHMETIC + NUMBER + NUMBER

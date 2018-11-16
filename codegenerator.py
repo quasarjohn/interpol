@@ -30,15 +30,14 @@ class CodeGenerator:
                 no_error = False
 
                 try:
+                    # check if the variable has been declared
                     variables[var_name]
                     print('Error on line ' + str(line_number) +
                           '. Variable `' + var_name + '` has already been declared')
                 except Exception:
+                    # if not, add it to the variables dictionary
                     no_error = True
                     variables[var_name] = data_type
-
-
-                variables[var_name] = data_type
 
                 # check if this is an assignment
                 if len(line) > 2 and no_error:
@@ -61,6 +60,7 @@ class CodeGenerator:
 
                 try:
                     data_type = variables[var_name]
+                    # check if the data type is int by the value is str
                     if data_type == Type.DTYPE_INT and data.type == Type.STR:
                         exception = IpolException(
                             ExceptionType.INCOMPATIBLE_DATA_TYPE_INT, line, line_number)
@@ -78,6 +78,7 @@ class CodeGenerator:
                     exception = IpolException(
                         ExceptionType.VARIABLE_NOT_DECLARED, line, line_number)
                     exception.print()
+                    return False
             elif line[0].type == Type.INPUT:
                 var_name = line[1].val
 
@@ -129,6 +130,7 @@ class CodeGenerator:
                 index = index + 1
             elif token.type == Type.STR:
                 formatted_str = "'" + token.val[1:len(token.val) - 1] +  "'"
+                formatted_str = formatted_str.replace('&nbsp', ' ')
                 converted_line = converted_line.replace(
                     placeholders[index], formatted_str)
                 index = index + 1

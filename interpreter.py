@@ -16,7 +16,6 @@ parsed_list = []
 final_parsed_list = []
 exceptions = []
 
-
 def main():
     print('Welcome to IPOL interpreter!')
 
@@ -55,6 +54,7 @@ def main():
             if isinstance(exception, IpolException):
                 exceptions.append(exception)
 
+    # print exceptions if there are any and halt the build process
     if len(exceptions) > 0:
         for exception in exceptions:
             exception.print()
@@ -63,10 +63,12 @@ def main():
         # continue with code generation
         generated_code = CodeGenerator().generate(tokens_list_copy)
 
+        # this may return a bool data type
         if isinstance(generated_code, list):
             runnable_code = '\n'.join(generated_code)
 
             exec(runnable_code, globals())
+        # if bool is returned, that means there was something wrong with the ipol code
         else:
             print('Build failed')
 
@@ -75,18 +77,8 @@ def main():
     #         print(token.type, token.val, end = " $ ")
 
 
-    
-
-    
-    
-
 def recursive_parse(parser, line, callback):
     parsed = parser.parse(line)
-
-    # for token in parsed:
-    #     print(token.type, token.val)
-
-    # print('**************************')
 
     # parse the line
     if not equal_ignore_order(parsed, line):
@@ -103,19 +95,14 @@ def recursive_parse(parser, line, callback):
         callback(line)
 
 # callback function for getting the parsed list
-
-
 def callback(parsed):
     parsed_list.append(parsed)
-
 
 def callback1(parsed):
     final_parsed_list.append(parsed)
 
 # checks if the returned parsed list is equal to the input list
 # which means the list can no longer be parsed
-
-
 def equal_ignore_order(a, b):
     unmatched = list(b)
     for element in a:
@@ -124,7 +111,6 @@ def equal_ignore_order(a, b):
         except ValueError:
             return False
     return not unmatched
-
 
 if __name__ == "__main__":
     main()

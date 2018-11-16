@@ -69,7 +69,7 @@ class Token:
             return Type.IN
         elif val == 'STORE':
             return Type.STORE
-        elif val == 'PLUS' or val == 'MINUS' or val == 'TIME' or val == 'DIVBY' or val == 'MODU' or val == 'EXP' or val == 'ROOT' or val == 'RAISE':
+        elif val == 'PLUS' or val == 'MINUS' or val == 'TIMES' or val == 'DIVBY' or val == 'MODU' or val == 'EXP' or val == 'ROOT' or val == 'RAISE':
             return Type.ARITHMETIC
         elif val == 'MEAN':
             return Type.MEAN

@@ -1,2 +1,3 @@
-DINT X
+DSTR X WITH [hahaha]
+STORE [hahaha = wow] IN X
 GIVEYOU! X
