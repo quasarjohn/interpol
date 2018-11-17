@@ -82,8 +82,7 @@ def main():
         # recursive_parse(parser, reduced_final_parsed_list, callback2)
         reduced_final_parsed_list[:] = (token for token in reduced_final_parsed_list \
         if token.type != Type.EMPTY_LINE)
-        for token in reduced_final_parsed_list:
-            print(token.type)
+
         # check syntax in class Syntax
         # Type.E means accepted
         # try:
@@ -111,7 +110,7 @@ def main():
             with open('ic.py', '+w') as ic:
                 ic.write(runnable_code)
 
-            print('\nBuild Complete.\nView logs on ipol_logs.txt\nView generated code on ic.py\n\n')
+            print('\nBuild Complete.\nView logs on ipol_logs.txt\nView generated code on ic.py\n')
             exec(runnable_code, globals())
 
             with open('ipol_logs.txt', '+w') as logs:
