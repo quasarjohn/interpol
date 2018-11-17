@@ -39,17 +39,15 @@ def main():
     for line in tokens_list:
         recursive_parse(parser, line, callback)
 
+
     # create a new instance of the parser now with the syntax for recuding operations to expressions
     parser = Parser(syntax=Syntax().get_final_syntax())
 
     # Parse to an expression to see if it is valid
     for line in parsed_list:
-        recursive_parse(parser, line, callback1)
+        recursive_parse(parser, line, callback1)  
+        
 
-    # for line in final_parsed_list:
-    #     for token in line:
-    #         print(token.type, end = ", ")
-    #     print('')
 
     exception_checker = ExceptionCheker()
 
@@ -80,8 +78,12 @@ def main():
         parser = Parser(syntax=Syntax().get_ipol_syntax())
 
         # finally, verify that the full code is valid
-        recursive_parse(parser, reduce(final_parsed_list), callback2)
-
+        reduced_final_parsed_list = reduce(final_parsed_list)
+        # recursive_parse(parser, reduced_final_parsed_list, callback2)
+        reduced_final_parsed_list[:] = (token for token in reduced_final_parsed_list \
+        if token.type != Type.EMPTY_LINE)
+        for token in reduced_final_parsed_list:
+            print(token.type)
         # check syntax in class Syntax
         # Type.E means accepted
         # try:
@@ -106,21 +108,35 @@ def main():
             runnable_code = '\n'.join(generated_code)
 
             # run the generated python code
+            with open('ic.py', '+w') as ic:
+                ic.write(runnable_code)
+
+            print('\nBuild Complete.\nView logs on ipol_logs.txt\nView generated code on ic.py\n\n')
             exec(runnable_code, globals())
 
-            # print('\n\n****************')
-            # print(Syntax().get_cfg())
+            with open('ipol_logs.txt', '+w') as logs:
+                text_to_write = 'PARSING LOGS\n\nGENERATED TOKENS\n'
+                for line in tokens_list:
+                    for token in line:
+                        text_to_write = text_to_write + '{} -> {}'.format(token.type, token.val) + ", "
+                    text_to_write = text_to_write + '\n'
 
-            # for line in tokens_list:
-            #     for token in line:
-            #         print(token.val, ':', token.type, end = ', ')
-            #     print('')
+                text_to_write = text_to_write + '\PARSED AS...\n'
+                for line in parsed_list:
+                    for token in line:
+                        text_to_write = text_to_write + str(token.type) + ', '
+                    text_to_write = text_to_write + '\n'
+
+                text_to_write = text_to_write + '\nGENERATED INTERMEDIATE CODE\n' + runnable_code
+                logs.write(text_to_write)
         # if bool is returned, that means there was something wrong with the ipol code
         else:
             print('Build failed')
 
 def recursive_parse(parser, line, callback):
     parsed = parser.parse(line)
+    
+    
 
     # parse the line
     if not equal_ignore_order(parsed, line):

@@ -12,7 +12,7 @@ class Tokenizer:
             tokens = []
             # use space as delimiter
             for word in line.split(' '):
-                token = Token(word)
+                token = Token(val=word)
                 token.line_number = line_number
                 tokens.append(token)
             tokens_list.append(tokens)
@@ -22,11 +22,11 @@ class Tokenizer:
 
 class Token:
 
-    def __init__(self, val=None, type=''):
+    def __init__(self, val=None, type=None):
         self. val = val
 
         # identify its type
-        if type == '':
+        if type == None:
             self.type = self.identify_token(val)
         else:
             self.type = type
@@ -82,6 +82,8 @@ class Token:
             return Type.CREATE
         elif val == 'RUPTURE':
             return Type.RUPTURE
+        elif val == '':
+            return Type.EMPTY_LINE
         else:
             return Type.VAR
 
@@ -143,3 +145,5 @@ class Type(Enum):
     DECLARATION_INT = 35
     DECLARATION_STR = 36
     DECLARATION_FLOAT = 37
+
+    EMPTY_LINE = 38

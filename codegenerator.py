@@ -2,7 +2,6 @@ from tokenizer import Type
 from ipolexception import IpolException
 from ipolexception import ExceptionType
 
-
 class CodeGenerator:
 
     # returns a string format and the value of the expression
@@ -18,11 +17,11 @@ class CodeGenerator:
         variables = {}
         # iterate the lines
         for line_number, line in enumerate(tokens_list):
-
-            converted_line = ''
+            if line[0].type == Type.EMPTY_LINE:
+                continue
             # check if the line is a declaration of a variable so we can keep
             # track of all the varaibles used in the generated code
-            if line[0].type == Type.DTYPE_INT or line[0].type == Type.DTYPE_STR:
+            elif line[0].type == Type.DTYPE_INT or line[0].type == Type.DTYPE_STR:
                 # this is a variable declaration
                 data_type = line[0].type
                 var_name = line[1].val
@@ -106,7 +105,7 @@ class CodeGenerator:
 
     def generate_simple_expression(self, line, variables):
         # used for generating arithmetic operations involving two integers
-        placeholders = ['&n0', '&n1']
+        placeholders = ['&n0', '&n1', '&n2', '&n3']
 
         # this counter is used to move between &n0 and &n1
         index = 0
@@ -115,7 +114,15 @@ class CodeGenerator:
         converted_line = '&n0'
 
         for line_number, token in enumerate(line):
-            if token.type == Type.MEAN:
+            if token.type == Type.EMPTY_LINE:
+                break
+            elif token.type == Type.DIST:
+                converted_line = converted_line.replace(placeholders[index], \
+                'distance(&n0, &n1, &n2, &n3)')
+                index = 0
+            elif token.type == Type.AND:
+                pass
+            elif token.type == Type.MEAN:
                 converted_line = converted_line.replace(
                         placeholders[index], self.generate_mean_operation(line[line_number:], variables))
                 index = 0
@@ -235,6 +242,9 @@ class CodeGenerator:
         converted_line = converted_line.replace('&n0', '')
         return converted_line
 
+
+
+
     def get_operation(self, token):
         if token.val == 'PLUS':
             return '+'
@@ -251,6 +261,10 @@ class CodeGenerator:
 
     def get_helper_functions(self):
         return """
+# this is the code generated from the Codegenerator class
+
+import math
+
 def root(i, j):
     return j ** (1 / i)
 
@@ -290,4 +304,7 @@ def mean(*numbers):
         sum = sum + number
     
     return sum / len(numbers)
+
+def distance(x, y, x1, y1):
+    return math.sqrt(math.pow(x - x1, 2) + math.pow(y - y1, 2))
 """
