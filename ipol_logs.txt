@@ -1,29 +1,43 @@
 PARSING LOGS
 
 GENERATED TOKENS
+Type.EMPTY_LINE -> , 
+Type.EMPTY_LINE -> , 
+Type.EMPTY_LINE -> , 
+Type.EMPTY_LINE -> , 
+Type.EMPTY_LINE -> , 
 Type.CREATE -> CREATE, 
 Type.DTYPE_INT -> DINT, Type.VAR -> X, Type.WITH -> WITH, Type.INT -> 1, 
 Type.EMPTY_LINE -> , 
-Type.OUTPUT -> GIVEYOU!!, Type.VAR -> X, 
-Type.EMPTY_LINE -> , 
+Type.OUTPUT -> GIVEYOU!!, Type.INT -> 8, 
 Type.EMPTY_LINE -> , 
 Type.EMPTY_LINE -> , 
 Type.OUTPUT -> GIVEYOU!!, Type.INT -> 88, 
 Type.OUTPUT -> GIVEYOU!!, Type.INT -> 69, 
 Type.OUTPUT -> GIVEYOU!!, Type.INT -> 88, 
 Type.RUPTURE -> RUPTURE, 
+Type.EMPTY_LINE -> , 
+Type.EMPTY_LINE -> , 
+Type.EMPTY_LINE -> , 
 \PARSED AS...
+Type.EMPTY_LINE, 
+Type.EMPTY_LINE, 
+Type.EMPTY_LINE, 
+Type.EMPTY_LINE, 
+Type.EMPTY_LINE, 
 Type.CREATE, 
 Type.DECLARATION_ASSIGNMENT, 
 Type.EMPTY_LINE, 
 Type.PRINT, 
 Type.EMPTY_LINE, 
 Type.EMPTY_LINE, 
-Type.EMPTY_LINE, 
 Type.PRINT, 
 Type.PRINT, 
 Type.PRINT, 
 Type.RUPTURE, 
+Type.EMPTY_LINE, 
+Type.EMPTY_LINE, 
+Type.EMPTY_LINE, 
 
 GENERATED INTERMEDIATE CODE
 
@@ -74,8 +88,9 @@ def mean(*numbers):
 def distance(x, y, x1, y1):
     return math.sqrt(math.pow(x - x1, 2) + math.pow(y - y1, 2))
 
+
 X = 1
-print(X)
+print(8)
 print(88)
 print(69)
 print(88)

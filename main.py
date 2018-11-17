@@ -106,7 +106,7 @@ def main():
         # this may return a bool data type
         if isinstance(generated_code, list):
             runnable_code = '\n'.join(generated_code)
-
+            runnable_code = runnable_code.replace('&n0', '')
             # run the generated python code
             with open('ic.py', '+w') as ic:
                 ic.write(runnable_code)

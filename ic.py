@@ -46,8 +46,9 @@ def mean(*numbers):
 def distance(x, y, x1, y1):
     return math.sqrt(math.pow(x - x1, 2) + math.pow(y - y1, 2))
 
+
 X = 1
-print(X)
+print(8)
 print(88)
 print(69)
 print(88)
