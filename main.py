@@ -42,9 +42,14 @@ def main():
     # create a new instance of the parser now with the syntax for recuding operations to expressions
     parser = Parser(syntax=Syntax().get_final_syntax())
 
-    # final stage of parsing. Parse to an expression to see if it is valid
+    # Parse to an expression to see if it is valid
     for line in parsed_list:
         recursive_parse(parser, line, callback1)
+
+    for line in tokens_list:
+        for token in line:
+            print(token.type, end = ", ")
+        print('')
 
     exception_checker = ExceptionCheker()
 
@@ -97,15 +102,16 @@ def main():
             runnable_code = '\n'.join(generated_code)
             # print(runnable_code)
 
+            # run the generated python code
             exec(runnable_code, globals())
 
-            print('\n\n****************')
-            print(Syntax().get_cfg())
+            # print('\n\n****************')
+            # print(Syntax().get_cfg())
 
-            for line in tokens_list:
-                for token in line:
-                    print(token.val, ':', token.type, end = ', ')
-                print('')
+            # for line in tokens_list:
+            #     for token in line:
+            #         print(token.val, ':', token.type, end = ', ')
+            #     print('')
         # if bool is returned, that means there was something wrong with the ipol code
         else:
             print('Build failed')

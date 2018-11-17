@@ -93,12 +93,7 @@ class CodeGenerator:
                 converted_line = var_name + \
                     ' = request_input({}, {})'.format(
                         "\'" + var_name + "\'", is_int)
-            elif line[0].type == Type.MEAN:
-                # else it is either just PRINT or ARITHMETIC operation
-                converted_line = self.generate_mean_operation(
-                    line, variables)
-                if not converted_line:
-                    return False
+
             else:
                 # else it is either just PRINT or ARITHMETIC operation
                 converted_line = self.generate_simple_expression(
@@ -120,7 +115,12 @@ class CodeGenerator:
         converted_line = '&n0'
 
         for line_number, token in enumerate(line):
-            if token.type == Type.ARITHMETIC:
+            if token.type == Type.MEAN:
+                converted_line = converted_line.replace(
+                        placeholders[index], self.generate_mean_operation(line[line_number:], variables))
+                index = 0
+                break
+            elif token.type == Type.ARITHMETIC:
                 if token.val == 'ROOT':
                     converted_line = converted_line.replace(
                         placeholders[index], 'root(&n0, &n1)')
@@ -172,7 +172,7 @@ class CodeGenerator:
             if token.type == Type.MEAN:
                 if not is_arith:
                     converted_line = converted_line.replace(
-                    placeholders[index], 'mean(&n0, &n2)')
+                    placeholders[index], 'mean(&n0, &n1)')
                     is_arith = True
                 else:
                     converted_line = converted_line.replace(
@@ -226,12 +226,14 @@ class CodeGenerator:
                 converted_line = converted_line.replace(
                     '&n0', print_type)
                 index = 0
-
+            
             if not is_arith:
                 converted_line = converted_line.replace('&n2', '&n0')
                 if '&n0' not in converted_line:
                     converted_line = converted_line[:len(converted_line) - 1] + ', &n0' + converted_line[len(converted_line) - 1:]
+        
         converted_line = converted_line.replace('&n0', '')
+        print(converted_line)
         return converted_line
 
     def get_operation(self, token):

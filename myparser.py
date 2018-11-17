@@ -14,7 +14,7 @@ class Parser:
         buffer = []
 
         if len(line) > 0:
-
+            parsed_to_return = []
             for index, token in enumerate(line):
                 if token.type == Type.MEAN:
                     is_mean_op = True
@@ -27,7 +27,11 @@ class Parser:
                         parsed.clear()
                         parsed.append(p)
                         buffer.clear()
-                        return parsed
+
+                        for token in line[:index]:
+                            parsed_to_return.append(token)
+                        parsed_to_return.append(p)
+                        return parsed_to_return
 
         for token in line:
             # push the token to the buffer
