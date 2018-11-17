@@ -63,11 +63,11 @@ class CodeGenerator:
                     # check if the data type is int by the value is str
                     if data_type == Type.DTYPE_INT and data.type == Type.STR:
                         exception = IpolException(
-                            ExceptionType.INCOMPATIBLE_DATA_TYPE_INT, line, line_number)
+                            ExceptionType.INCOMPATIBLE_DATA_TYPE_INT, line, line_number + 1)
                         exception.print()
                     elif data_type == Type.DECLARATION_STR and not data.type == Type.STR:
                         exception = IpolException(
-                            ExceptionType.INCOMPATIBLE_DATA_TYPE_INT, line, line_number)
+                            ExceptionType.INCOMPATIBLE_DATA_TYPE_INT, line, line_number + 1)
                         exception.print()
                     else:
                         converted_line = var_name + ' = ' + \
@@ -76,7 +76,7 @@ class CodeGenerator:
                 except:
                     # variable was not declared
                     exception = IpolException(
-                        ExceptionType.VARIABLE_NOT_DECLARED, line, line_number)
+                        ExceptionType.VARIABLE_NOT_DECLARED, line, line_number + 1)
                     exception.print()
                     return False
             elif line[0].type == Type.INPUT:
@@ -233,7 +233,6 @@ class CodeGenerator:
                     converted_line = converted_line[:len(converted_line) - 1] + ', &n0' + converted_line[len(converted_line) - 1:]
         
         converted_line = converted_line.replace('&n0', '')
-        print(converted_line)
         return converted_line
 
     def get_operation(self, token):

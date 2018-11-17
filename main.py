@@ -46,10 +46,10 @@ def main():
     for line in parsed_list:
         recursive_parse(parser, line, callback1)
 
-    for line in tokens_list:
-        for token in line:
-            print(token.type, end = ", ")
-        print('')
+    # for line in final_parsed_list:
+    #     for token in line:
+    #         print(token.type, end = ", ")
+    #     print('')
 
     exception_checker = ExceptionCheker()
 
@@ -65,10 +65,10 @@ def main():
 
     # now check if the overall structure of the code is valid
     # check if there are unused values
-    for index, token in enumerate(reduce(final_parsed_list)):
-        if token.type == Type.NUMBER or token.type == Type.STR:
-            exceptions.append(IpolException(
-                ExceptionType.UNUSED_VALUE_ERROR, None, index))
+    # for index, token in enumerate(reduce(final_parsed_list)):
+    #     if token.type == Type.NUMBER or token.type == Type.STR:
+    #         exceptions.append(IpolException(
+    #             ExceptionType.UNUSED_VALUE_ERROR, None, index))
 
     # print exceptions if there are any and halt the build process
     if len(exceptions) > 0:
@@ -84,11 +84,15 @@ def main():
 
         # check syntax in class Syntax
         # Type.E means accepted
-        if ipol_code_verified[0][0].type == Type.E:
-            print('Build Successful\n')
-        else:
-            print('Build Failed. Double check the starting and ending statements.')
-            return
+        # try:
+        #     if ipol_code_verified[0][0].type == Type.E:
+        #         print('Build Successful\n')
+        #     else:
+        #         print('Build Failed. wow')
+        #         return
+        # except:
+        #     print('Build Failed. wow')
+        #     return
 
         # there are no exceptions
         # continue with code generation
@@ -100,7 +104,6 @@ def main():
         # this may return a bool data type
         if isinstance(generated_code, list):
             runnable_code = '\n'.join(generated_code)
-            # print(runnable_code)
 
             # run the generated python code
             exec(runnable_code, globals())

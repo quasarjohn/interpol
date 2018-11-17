@@ -17,21 +17,21 @@ class Parser:
             parsed_to_return = []
             for index, token in enumerate(line):
                 if token.type == Type.MEAN:
-                    is_mean_op = True
-                    for token in line[index + 1:]:
-                        if not token.type == Type.NUMBER and not token.type == Type.VAR:
-                            is_mean_op = False
-                    if is_mean_op:
-                        p = Token(type=Type.AVERAGE)
-                        p.val = buffer.copy()
-                        parsed.clear()
-                        parsed.append(p)
-                        buffer.clear()
+                    for j, token in enumerate(line[index + 1:]):
+                        if (not token.type == Type.NUMBER and not token.type == \
+                        Type.VAR) or len(line[index + 1:]) - 1 == j:
+                            p = Token(type=Type.AVERAGE)
+                            p.val = buffer.copy()
+                            parsed.clear()
+                            parsed.append(p)
+                            buffer.clear()
 
-                        for token in line[:index]:
-                            parsed_to_return.append(token)
-                        parsed_to_return.append(p)
-                        return parsed_to_return
+                            for token in line[:index]:
+                                parsed_to_return.append(token)
+                            parsed_to_return.append(p)
+                            for token in line[len(line[index + 1:]):]:
+                                parsed_to_return.append(token)
+                            return parsed_to_return
 
         for token in line:
             # push the token to the buffer

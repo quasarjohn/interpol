@@ -8,11 +8,12 @@ class Tokenizer:
     def tokenize(self, lines):
         tokens_list = []
 
-        for line in lines:
+        for line_number, line in enumerate(lines):
             tokens = []
             # use space as delimiter
             for word in line.split(' '):
                 token = Token(word)
+                token.line_number = line_number
                 tokens.append(token)
             tokens_list.append(tokens)
 
