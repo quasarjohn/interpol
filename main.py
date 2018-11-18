@@ -79,21 +79,29 @@ def main():
 
         # finally, verify that the full code is valid
         reduced_final_parsed_list = reduce(final_parsed_list)
+
         # recursive_parse(parser, reduced_final_parsed_list, callback2)
         reduced_final_parsed_list[:] = (token for token in reduced_final_parsed_list \
         if token.type != Type.EMPTY_LINE)
 
+        recursive_parse(parser, reduced_final_parsed_list, callback2)
+
+        for line in ipol_code_verified:
+            for token in line:
+                print(token.type)
+
         # check syntax in class Syntax
         # Type.E means accepted
-        # try:
-        #     if ipol_code_verified[0][0].type == Type.E:
-        #         print('Build Successful\n')
-        #     else:
-        #         print('Build Failed. wow')
-        #         return
-        # except:
-        #     print('Build Failed. wow')
-        #     return
+        build_failed_message = 'Build Failed.'
+        try:
+            if ipol_code_verified[0][0].type == Type.E:
+                print('Build Successful\n')
+            else:
+                print(build_failed_message)
+                return
+        except:
+            print(build_failed_message)
+            return
 
         # there are no exceptions
         # continue with code generation
